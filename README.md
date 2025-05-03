@@ -1,20 +1,26 @@
-# prompt-keeper
+# Prompt Keeper
 
-This template should help get you started developing with Vue 3 in Vite.
+A vibecoded personal prompt management application built with Vue 3 and shadcn components. This locally-stored prompt keeper helps you organize, filter, and manage your AI prompts, instructions, or any text snippets you want to save for later use.
 
-## Recommended IDE Setup
+## Features
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+- 📝 Create, edit, and delete prompts
+- 🏷️ Tag-based organization with custom colors
+- 🔍 Search prompts by title or content
+- ⭐ Mark favorites for quick access
+- 🌓 Light/dark mode support
+- 💾 Local storage persistence (all data stays on your device)
+- 📱 Responsive design for all screen sizes
 
-## Type Support for `.vue` Imports in TS
+## Why Use Prompt Keeper?
 
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) to make the TypeScript language service aware of `.vue` types.
+Prompt Keeper is designed for personal use, helping you maintain a library of useful prompts for different AI systems, creative writing, coding tasks, or any text templates you frequently use.
 
-## Customize configuration
+## Get Started
 
-See [Vite Configuration Reference](https://vite.dev/config/).
+This application is built with Vue.js and Vite.
 
-## Project Setup
+### Project Setup
 
 ```sh
 npm install
@@ -32,8 +38,32 @@ npm run dev
 npm run build
 ```
 
-### Lint with [ESLint](https://eslint.org/)
+### Lint with ESLint
 
 ```sh
 npm run lint
 ```
+
+## Privacy
+
+All data is stored locally in your browser using localStorage. No data is sent to any server, ensuring your prompts remain private.
+
+## Customization
+
+Built with shadcn-vue components, the application can be easily customized to match your personal style preferences.
+
+---
+
+Vibecoded for personal use - maintain your prompt collection with style!
+
+## Recommended IDE Setup
+
+[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+
+## Type Support for `.vue` Imports in TS
+
+TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) to make the TypeScript language service aware of `.vue` types.
+
+## Customize configuration
+
+See [Vite Configuration Reference](https://vite.dev/config/).

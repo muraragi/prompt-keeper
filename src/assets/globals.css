@@ -1,0 +1,54 @@
+@import 'tailwindcss/preflight';
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 30 10% 4%; /* Dark brown */
+    --foreground: 30 5% 90%; /* Light beige/cream */
+
+    --card: 30 10% 8%; /* Slightly lighter dark brown */
+    --card-foreground: 30 5% 90%; /* Light beige/cream */
+
+    --popover: 30 10% 4%; /* Dark brown */
+    --popover-foreground: 30 5% 90%; /* Light beige/cream */
+
+    --primary: 35 80% 60%; /* Muted gold/brass */
+    --primary-foreground: 30 10% 4%; /* Dark brown for text on primary */
+
+    --secondary: 30 15% 15%; /* Darker grey-brown */
+    --secondary-foreground: 30 5% 80%; /* Lighter grey/beige */
+
+    --muted: 30 10% 15%; /* Slightly lighter grey-brown */
+    --muted-foreground: 30 5% 65%; /* Medium grey/beige */
+
+    --accent: 35 70% 50%; /* Slightly less muted gold/brass */
+    --accent-foreground: 30 10% 4%; /* Dark brown */
+
+    --destructive: 0 70% 50%; /* Muted red */
+    --destructive-foreground: 0 0% 100%; /* White */
+
+    --border: 30 10% 15%; /* Slightly lighter grey-brown */
+    --input: 30 10% 15%; /* Slightly lighter grey-brown */
+    --ring: 35 80% 60%; /* Muted gold/brass for focus rings */
+
+    --radius: 0.5rem;
+  }
+
+  /* Optional: Add a light theme variant if needed */
+  /*
+  .light {
+    --background: 30 20% 96%; 
+    --foreground: 30 10% 8%;
+    ...
+  }
+  */
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
