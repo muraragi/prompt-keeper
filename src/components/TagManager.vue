@@ -52,22 +52,27 @@
       <div v-if="tags.length === 0" class="p-4 text-center text-muted-foreground">
         No tags created yet
       </div>
-      <div v-else class="divide-y">
+      <div v-else class="divide-y divide-border overflow-y-auto max-h-72">
         <div v-for="tag in tags" :key="tag.id" class="flex items-center justify-between p-3">
           <div class="flex items-center space-x-2">
-            <div class="h-4 w-4 rounded-full" :style="{ backgroundColor: tag.color }"></div>
-            <span>{{ tag.name }}</span>
+            <div
+              class="h-4 w-4 rounded-full flex-shrink-0"
+              :style="{ backgroundColor: tag.color }"
+            ></div>
+            <span class="truncate">{{ tag.name }}</span>
           </div>
-          <div class="flex space-x-1">
+          <div class="flex space-x-1 flex-shrink-0">
             <button
               @click="editTag(tag)"
               class="rounded-md p-1.5 text-muted-foreground hover:bg-muted"
+              aria-label="Edit tag"
             >
               <Pencil :size="16" />
             </button>
             <button
               @click="deleteTag(tag.id)"
               class="rounded-md p-1.5 text-muted-foreground hover:bg-destructive hover:text-destructive-foreground"
+              aria-label="Delete tag"
             >
               <Trash2 :size="16" />
             </button>

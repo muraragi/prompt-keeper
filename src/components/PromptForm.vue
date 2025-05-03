@@ -1,112 +1,121 @@
 <template>
-  <form @submit.prevent="handleSubmit" class="space-y-4">
+  <form @submit.prevent="handleSubmit" class="space-y-6">
     <div class="space-y-2">
-      <label for="title" class="text-sm font-medium">Title</label>
-      <input
-        id="title"
-        v-model="form.title"
-        type="text"
-        class="w-full rounded-md border bg-background px-3 py-2"
-        placeholder="Prompt title"
+      <Label for="title">Title</Label>
+      <Input id="title" v-model="form.title" type="text" placeholder="Prompt title" required />
+    </div>
+
+    <div class="space-y-2">
+      <Label for="content">Content</Label>
+      <Textarea
+        id="content"
+        v-model="form.content"
+        class="h-40"
+        placeholder="Write your prompt here..."
         required
       />
     </div>
 
     <div class="space-y-2">
-      <label for="content" class="text-sm font-medium">Content</label>
-      <textarea
-        id="content"
-        v-model="form.content"
-        class="h-40 w-full rounded-md border bg-background px-3 py-2"
-        placeholder="Write your prompt here..."
-        required
-      ></textarea>
-    </div>
-
-    <div class="space-y-2">
-      <label class="text-sm font-medium">Tags</label>
-      <div class="flex flex-wrap gap-2">
-        <div
-          v-for="tag in tags"
-          :key="tag.id"
-          @click="toggleTag(tag.id)"
-          class="cursor-pointer rounded-full px-3 py-1 text-sm"
-          :class="form.tags.includes(tag.id) ? 'text-white' : 'text-foreground bg-muted'"
-          :style="form.tags.includes(tag.id) ? { backgroundColor: tag.color } : {}"
+      <Label>Tags</Label>
+      <Popover v-model:open="tagsPopoverOpen">
+        <PopoverTrigger as-child>
+          <Button
+            variant="outline"
+            role="combobox"
+            :aria-expanded="tagsPopoverOpen"
+            class="w-full justify-between whitespace-nowrap"
+          >
+            {{ form.tags.length > 0 ? `${form.tags.length} selected` : 'Select Tags...' }}
+            <ChevronsUpDown class="ml-2 h-4 w-4 shrink-0 opacity-50" />
+          </Button>
+        </PopoverTrigger>
+        <PopoverContent class="w-[--radix-popover-trigger-width] p-0">
+          <Command>
+            <CommandInput placeholder="Search tags..." />
+            <CommandList>
+              <CommandEmpty>No tags found.</CommandEmpty>
+              <CommandGroup>
+                <CommandItem
+                  v-for="tag in availableTags"
+                  :key="tag.id"
+                  :value="tag.id"
+                  @select="handleTagSelect(tag.id)"
+                >
+                  <Check
+                    :class="
+                      cn('mr-2 h-4 w-4', form.tags.includes(tag.id) ? 'opacity-100' : 'opacity-0')
+                    "
+                  />
+                  <span
+                    class="mr-2 h-2 w-2 rounded-full"
+                    :style="{ backgroundColor: tag.color }"
+                  ></span>
+                  {{ tag.name }}
+                </CommandItem>
+                <!-- Option to add tag creation item here later -->
+              </CommandGroup>
+            </CommandList>
+          </Command>
+        </PopoverContent>
+      </Popover>
+      <!-- Display Selected Tags Below -->
+      <div v-if="form.tags.length > 0" class="mt-2 flex flex-wrap gap-1">
+        <Badge
+          v-for="tagId in form.tags"
+          :key="tagId"
+          variant="secondary"
+          class="flex items-center border pr-1"
+          :style="{
+            backgroundColor: getTagColor(tagId),
+            color: 'white',
+            borderColor: getTagColor(tagId),
+          }"
         >
-          {{ tag.name }}
-        </div>
-        <div
-          @click="showTagForm = true"
-          class="cursor-pointer rounded-full border border-dashed border-muted-foreground px-3 py-1 text-sm text-muted-foreground hover:bg-muted"
-        >
-          + Add Tag
-        </div>
+          <span class="mr-1">{{ getTagName(tagId) }}</span>
+          <button
+            type="button"
+            class="ml-auto h-4 w-4 rounded-full text-white/70 transition-colors hover:text-white focus:outline-none focus:ring-1 focus:ring-white/50"
+            @click.stop="handleTagSelect(tagId)"
+            aria-label="Remove tag"
+          >
+            <X class="h-3 w-3" />
+          </button>
+        </Badge>
       </div>
     </div>
 
-    <div v-if="showTagForm" class="rounded-md border bg-card p-4">
-      <div class="mb-4 space-y-2">
-        <label for="tagName" class="text-sm font-medium">Tag Name</label>
-        <input
-          id="tagName"
-          v-model="newTag.name"
-          type="text"
-          class="w-full rounded-md border bg-background px-3 py-1.5"
-          placeholder="Enter tag name"
-          required
-        />
-      </div>
-      <div class="mb-4 space-y-2">
-        <label class="text-sm font-medium">Color</label>
-        <div class="flex flex-wrap gap-2">
-          <div
-            v-for="color in colors"
-            :key="color"
-            @click="newTag.color = color"
-            class="h-6 w-6 cursor-pointer rounded-full"
-            :class="newTag.color === color ? 'ring-2 ring-ring ring-offset-2' : ''"
-            :style="{ backgroundColor: color }"
-          ></div>
-        </div>
-      </div>
-      <div class="flex justify-end space-x-2">
-        <button
-          type="button"
-          @click="showTagForm = false"
-          class="rounded-md border px-3 py-1.5 text-sm"
-        >
-          Cancel
-        </button>
-        <button
-          type="button"
-          @click="createTag"
-          class="rounded-md bg-primary px-3 py-1.5 text-sm text-primary-foreground"
-        >
-          Add
-        </button>
-      </div>
-    </div>
+    <!-- Removed inline tag creation form -->
 
-    <div class="flex justify-end space-x-3 pt-2">
-      <button type="button" @click="$emit('cancel')" class="rounded-md border px-4 py-2 text-sm">
-        Cancel
-      </button>
-      <button type="submit" class="rounded-md bg-primary px-4 py-2 text-sm text-primary-foreground">
-        {{ props.prompt ? 'Update' : 'Create' }} Prompt
-      </button>
+    <div class="flex justify-end space-x-3 pt-4">
+      <Button type="button" variant="outline" @click="$emit('cancel')">Cancel</Button>
+      <Button type="submit"> {{ props.prompt ? 'Update' : 'Create' }} Prompt </Button>
     </div>
   </form>
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, onMounted } from 'vue'
+import { ref, reactive, onMounted, computed } from 'vue'
+import { Check, ChevronsUpDown, X } from 'lucide-vue-next'
 import type { Prompt } from '@/lib/types'
-import { addPrompt, updatePrompt, tags, addTag } from '@/lib/store'
+import { addPrompt, updatePrompt, tags } from '@/lib/store'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Textarea } from '@/components/ui/textarea'
+import { Label } from '@/components/ui/label'
+import { Badge } from '@/components/ui/badge'
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from '@/components/ui/command'
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
+import { cn } from '@/lib/utils'
 
-const props = defineProps<{
-  prompt?: Prompt
-}>()
+const props = defineProps<{ prompt?: Prompt }>()
 
 const emit = defineEmits<{
   (e: 'submit', prompt: Prompt): void
@@ -120,22 +129,9 @@ const form = reactive({
   favorite: false,
 })
 
-const showTagForm = ref(false)
-const newTag = reactive({
-  name: '',
-  color: '#3b82f6',
-})
+const tagsPopoverOpen = ref(false)
 
-const colors = [
-  '#ef4444', // Red
-  '#f97316', // Orange
-  '#f59e0b', // Amber
-  '#84cc16', // Lime
-  '#22c55e', // Green
-  '#3b82f6', // Blue
-  '#8b5cf6', // Violet
-  '#ec4899', // Pink
-]
+const availableTags = computed(() => tags.value)
 
 onMounted(() => {
   if (props.prompt) {
@@ -146,7 +142,8 @@ onMounted(() => {
   }
 })
 
-const toggleTag = (tagId: string) => {
+const handleTagSelect = (tagId: string) => {
+  if (!tagId) return
   const index = form.tags.indexOf(tagId)
   if (index === -1) {
     form.tags.push(tagId)
@@ -155,37 +152,21 @@ const toggleTag = (tagId: string) => {
   }
 }
 
-const createTag = () => {
-  if (newTag.name.trim()) {
-    const createdTag = addTag({
-      name: newTag.name.trim(),
-      color: newTag.color,
-    })
-    form.tags.push(createdTag.id)
-    newTag.name = ''
-    showTagForm.value = false
+const handleSubmit = () => {
+  if (props.prompt) {
+    const updated = updatePrompt(props.prompt.id, { ...form })
+    if (updated) emit('submit', updated)
+  } else {
+    const newPrompt = addPrompt({ ...form })
+    emit('submit', newPrompt)
   }
 }
 
-const handleSubmit = () => {
-  if (props.prompt) {
-    const updated = updatePrompt(props.prompt.id, {
-      title: form.title,
-      content: form.content,
-      tags: form.tags,
-      favorite: form.favorite,
-    })
-    if (updated) {
-      emit('submit', updated)
-    }
-  } else {
-    const newPrompt = addPrompt({
-      title: form.title,
-      content: form.content,
-      tags: form.tags,
-      favorite: form.favorite,
-    })
-    emit('submit', newPrompt)
-  }
+const getTagName = (tagId: string): string => {
+  return availableTags.value.find((t) => t.id === tagId)?.name || 'Unknown'
+}
+
+const getTagColor = (tagId: string): string => {
+  return availableTags.value.find((t) => t.id === tagId)?.color || '#888888'
 }
 </script>
