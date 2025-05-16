@@ -44,6 +44,13 @@
           <Pencil :size="16" />
         </button>
         <button
+          @click="copyDetails"
+          class="inline-flex h-8 w-8 items-center justify-center rounded-md text-muted-foreground hover:bg-muted"
+        >
+          <Check v-if="copied" :size="16" class="text-green-500" />
+          <Copy v-else :size="16" />
+        </button>
+        <button
           @click="$emit('delete', prompt.id)"
           class="inline-flex h-8 w-8 items-center justify-center rounded-md text-muted-foreground hover:bg-destructive hover:text-destructive-foreground"
         >
@@ -55,7 +62,8 @@
 </template>
 
 <script setup lang="ts">
-import { Star, Pencil, Trash2 } from 'lucide-vue-next'
+import { Star, Pencil, Trash2, Copy, Check } from 'lucide-vue-next'
+import { ref } from 'vue'
 import type { Prompt } from '@/lib/types'
 import { formatDate, truncateText } from '@/lib/utils'
 import { tags, updatePrompt } from '@/lib/store'
@@ -68,6 +76,9 @@ defineEmits<{
   (e: 'edit', id: string): void
   (e: 'delete', id: string): void
 }>()
+
+// State for copy indicator
+const copied = ref(false)
 
 const getTagName = (tagId: string) => {
   const tag = tags.value.find((t) => t.id === tagId)
@@ -83,5 +94,20 @@ const toggleFavorite = () => {
   updatePrompt(props.prompt.id, {
     favorite: !props.prompt.favorite,
   })
+}
+
+// Function to copy prompt details to clipboard
+const copyDetails = async () => {
+  const tagNames = props.prompt.tags.map((id) => getTagName(id))
+  const text = `Title: ${props.prompt.title}\nTags: ${tagNames.join(', ')}\n\n${props.prompt.content}`
+  try {
+    await navigator.clipboard.writeText(text)
+    copied.value = true
+    setTimeout(() => {
+      copied.value = false
+    }, 2000)
+  } catch (error) {
+    console.error('Failed to copy prompt details:', error)
+  }
 }
 </script>

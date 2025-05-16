@@ -57,7 +57,7 @@
 
     <!-- Create/Edit Prompt Dialog -->
     <Dialog :open="showCreateForm || !!editingPrompt" @update:open="closeForm">
-      <DialogContent class="sm:max-w-[425px]">
+      <DialogContent class="sm:max-w-[800px]">
         <DialogHeader>
           <DialogTitle>{{ editingPrompt ? 'Edit Prompt' : 'Create New Prompt' }}</DialogTitle>
           <DialogDescription>

@@ -10,7 +10,7 @@
       <Textarea
         id="content"
         v-model="form.content"
-        class="h-40"
+        class="h-60"
         placeholder="Write your prompt here..."
         required
       />
