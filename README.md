@@ -8,7 +8,6 @@ A vibecoded personal prompt management application built with Vue 3 and shadcn c
 - 🏷️ Tag-based organization with custom colors
 - 🔍 Search prompts by title or content
 - ⭐ Mark favorites for quick access
-- 🌓 Light/dark mode support
 - 💾 Local storage persistence (all data stays on your device)
 - 📱 Responsive design for all screen sizes
 
